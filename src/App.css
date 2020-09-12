@@ -24,15 +24,21 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.box {
+    border: 1px solid white;
+    font-size: 12pt;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.breadcrumb {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.breadcrumb + .breadcrumb:before {
+    content: " > ";
 }
