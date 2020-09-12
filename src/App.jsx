@@ -20,7 +20,9 @@ function build(groups, i, remaining, dispatch) {
     };
 
     const pieces = [
-        <div style={{...style, position: 'absolute'}} className="box" onClick={() => dispatch({ type: 'PUSH', payload: grp.name })}>
+        <div style={{...style, position: 'absolute'}} className="box"
+             onClick={grp.groups ?
+                      () => dispatch({ type: 'PUSH', payload: grp.name }) : null}>
           {grp.name}
         </div>
     ];
@@ -67,17 +69,33 @@ function App() {
     const level = nav.reduce((d, l) => d.groups[l], data);
     const {groups, total} = level;
 
-    const sorted = Object.values(groups).sort().reverse();
+    const sorted = groups ? Object.values(groups).sort((a, b) => (b.total - a.total)) : [];
+
+    const items = [].concat(...sorted.map(grp => (grp.items || [])));
 
   return (
     <div className="App">
       <header className="App-header">
-        <div>{nav.map((txt, i) =>
-                      <div className="breadcrumb" onClick={() => dispatch({ type: 'GOTO', payload: nav.slice(0, i+1) })}>{txt}</div>
-                     )}</div>
+        <div>
+          <div className="breadcrumb" onClick={() => dispatch({ type: 'GOTO', payload: [] })}>
+            Top
+          </div>
+          {nav.map((txt, i) =>
+                   <div className="breadcrumb" onClick={() => dispatch({ type: 'GOTO', payload: nav.slice(0, i+1) })}>
+                     {txt}
+                   </div>
+                  )}
+        </div>
         <div style={{ width: 400, height: 300, position: 'relative' }} className="box">
           {build(sorted, 0, total, dispatch)}
         </div>
+      {items.length ?
+       <div>
+         <h3>Line Items</h3>
+         <ul>
+           {items.map(item => <li>{item.description}</li>)}
+         </ul>
+       </div> : null}
       </header>
     </div>
   );
